@@ -7,10 +7,10 @@ export const ITEMS = {
                 game.playerHealth = Math.min(game.playerHealth + 1, 3);
                 return "生命值+1";
             }
-            return "无效（假血状态）";
+            return "无效（假血状态或第三局）";
         }
     },
-    
+
     handcuffs: {
         name: "手铐",
         description: "跳过AI的下一个回合",
@@ -19,7 +19,7 @@ export const ITEMS = {
             return "AI下回合将被跳过";
         }
     },
-    
+
     knife: {
         name: "小刀",
         description: "下一发子弹伤害翻倍",
@@ -28,7 +28,7 @@ export const ITEMS = {
             return "下一发子弹伤害翻倍";
         }
     },
-    
+
     drink: {
         name: "饮料",
         description: "移除枪膛中的一发子弹",
@@ -37,10 +37,10 @@ export const ITEMS = {
                 const removed = game.bullets.pop();
                 return `移除了一发${removed ? "实弹" : "空包弹"}`;
             }
-            return "枪膛已空";
+            return "枪膛已空，无法移除";
         }
     },
-    
+
     magnifier: {
         name: "放大镜",
         description: "查看枪膛中的下一发子弹",
@@ -48,7 +48,7 @@ export const ITEMS = {
             if (game.bullets.length > 0) {
                 return `下一发是${game.bullets[0] ? "实弹" : "空包弹"}`;
             }
-            return "枪膛已空";
+            return "枪膛已空，无法查看";
         }
     }
 };
