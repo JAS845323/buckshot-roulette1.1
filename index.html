@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Buckshot Roulette</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="game-container">
+        <h1>Buckshot Roulette</h1>
+        
+        <div class="game-info">
+            <div class="health-bars">
+                <div class="health-bar player">
+                    <span>玩家: </span>
+                    <div class="hearts" id="player-health"></div>
+                </div>
+                <div class="health-bar ai">
+                    <span>AI: </span>
+                    <div class="hearts" id="ai-health"></div>
+                </div>
+            </div>
+            <div class="round-info" id="round-info">第1局</div>
+            <div class="turn-info" id="turn-info">你的回合</div>
+        </div>
+        
+        <div class="bullet-display" id="bullet-display"></div>
+        
+        <div class="action-buttons">
+            <button id="shoot-self">对自己开枪</button>
+            <button id="shoot-ai">对AI开枪</button>
+            <button id="peek">检查下一发</button>
+        </div>
+        
+        <div class="current-items" id="current-items">
+            <h3>本回合道具</h3>
+            <!-- 道具会通过JS动态添加 -->
+        </div>
+        
+        <div class="action-log" id="action-log"></div>
+    </div>
+
+    <!-- 音效 -->
+    <audio id="shot-sound" src="assets/sounds/shot.mp3"></audio>
+    <audio id="click-sound" src="assets/sounds/click.mp3"></audio>
+    <audio id="item-sound" src="assets/sounds/item-use.mp3"></audio>
+    <audio id="reload-sound" src="assets/sounds/reload.mp3"></audio>
+
+    <!-- 脚本 -->
+    <script type="module" src="script/main.js"></script>
+</body>
+</html>
