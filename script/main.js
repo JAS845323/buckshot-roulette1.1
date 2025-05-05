@@ -1,6 +1,7 @@
 import { BuckshotRoulette } from './game.js';
 import { AI } from './ai.js';
 import { delay, playSound, updateHealthDisplay, preloadSounds } from './utils.js';
+import { ITEMS } from './items.js';
 
 // 初始化游戏和AI
 const game = new BuckshotRoulette();
@@ -31,21 +32,15 @@ function initGame() {
 
 // 更新UI
 function updateUI() {
-    // 更新生命值
     updateHealthDisplay(elements.playerHealth, game.playerHealth);
     updateHealthDisplay(elements.aiHealth, game.aiHealth);
-    
-    // 更新回合信息
+
     elements.roundInfo.textContent = `第${game.currentRound}局`;
     elements.turnInfo.textContent = game.isPlayerTurn ? "你的回合" : "AI的回合";
-    
-    // 更新子弹显示
+
     updateBulletDisplay();
-    
-    // 更新当前道具显示
     updateCurrentItemsDisplay();
-    
-    // 禁用/启用按钮
+
     const isPlayerActive = game.isPlayerTurn && !game.isGameOver();
     elements.shootSelfBtn.disabled = !isPlayerActive;
     elements.shootAiBtn.disabled = !isPlayerActive;
@@ -66,7 +61,7 @@ function updateBulletDisplay() {
 // 更新当前道具显示
 function updateCurrentItemsDisplay() {
     elements.currentItems.innerHTML = '<h3>本回合道具</h3>';
-    
+
     game.currentItems.forEach(itemType => {
         const itemEl = document.createElement('div');
         itemEl.className = 'current-item';
@@ -76,20 +71,20 @@ function updateCurrentItemsDisplay() {
             <span>${ITEMS[itemType].name}</span>
         `;
         itemEl.title = `${ITEMS[itemType].name}: ${ITEMS[itemType].description}`;
-        
+
         itemEl.addEventListener('click', () => {
             if (!game.isPlayerTurn || game.isGameOver()) return;
-            
+
             playSound('item');
             const result = game.useItem(itemType);
             logAction(`使用【${ITEMS[itemType].name}】: ${result}`);
             updateUI();
-            
+
             if (game.isGameOver()) {
                 showGameResult();
             }
         });
-        
+
         elements.currentItems.appendChild(itemEl);
     });
 }
@@ -105,33 +100,31 @@ function logAction(message) {
 
 // 绑定事件
 function bindEvents() {
-    // 开枪按钮
     elements.shootSelfBtn.addEventListener('click', async () => {
         if (!game.isPlayerTurn || game.isGameOver()) return;
-        
+
         playSound('shot');
         const result = game.shoot(true);
         logAction(result);
         updateUI();
-        
+
         await handleTurnEnd();
     });
-    
+
     elements.shootAiBtn.addEventListener('click', async () => {
         if (!game.isPlayerTurn || game.isGameOver()) return;
-        
+
         playSound('shot');
         const result = game.shoot(false);
         logAction(result);
         updateUI();
-        
+
         await handleTurnEnd();
     });
-    
-    // 检查子弹
+
     elements.peekBtn.addEventListener('click', () => {
         if (!game.isPlayerTurn || game.isGameOver()) return;
-        
+
         playSound('click');
         const result = game.peekNextBullet();
         logAction(`检查子弹: ${result}`);
@@ -144,8 +137,7 @@ async function handleTurnEnd() {
         showGameResult();
         return;
     }
-    
-    // 检查是否需要进入下一轮
+
     if (game.bullets.length === 0 && game.currentRound < 3) {
         game.currentRound++;
         await game.initRound(game.currentRound);
@@ -153,16 +145,13 @@ async function handleTurnEnd() {
         updateUI();
         return;
     }
-    
-    // AI回合
+
     if (!game.isPlayerTurn) {
-        await delay(1000); // 等待1秒让玩家看到回合切换
-        
+        await delay(1000);
         const result = await ai.takeTurn(game);
         if (result) logAction(result);
-        
         updateUI();
-        await handleTurnEnd(); // 递归处理
+        await handleTurnEnd();
     }
 }
 
@@ -170,8 +159,6 @@ async function handleTurnEnd() {
 function showGameResult() {
     let message = game.getGameResult();
     logAction(`游戏结束！${message}`);
-    
-    // 禁用所有按钮
     elements.shootSelfBtn.disabled = true;
     elements.shootAiBtn.disabled = true;
     elements.peekBtn.disabled = true;
